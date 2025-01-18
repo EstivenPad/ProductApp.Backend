@@ -1,0 +1,63 @@
+﻿@ProductApp.API_HostAddress = https://localhost:7299
+@id=2
+
+GET {{ProductApp.API_HostAddress}}/api/color/{{id}}
+
+###
+
+POST {{ProductApp.API_HostAddress}}/api/color
+Content-Type: application/json
+
+{
+    "name": "Azul",
+    "price": 400
+}
+
+###
+
+PUT {{ProductApp.API_HostAddress}}/api/color
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Rojo",
+  "price": 10
+}
+
+###
+
+DELETE {{ProductApp.API_HostAddress}}/api/color/{{id}}
+
+###
+
+
+
+
+
+
+
+
+
+
+GET {{ProductApp.API_HostAddress}}/api/product/{{id}}
+
+###
+
+
+POST {{ProductApp.API_HostAddress}}/api/product
+Content-Type: application/json
+
+{
+  "name": "Silla",
+  "colorId": 3
+}
+
+###
+
+DELETE {{ProductApp.API_HostAddress}}/api/product/{{id}}
+
+###
+
+GET {{ProductApp.API_HostAddress}}/api/product
+
+###

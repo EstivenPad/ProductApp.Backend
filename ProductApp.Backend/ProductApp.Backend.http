@@ -1,6 +1,0 @@
-@ProductApp.Backend_HostAddress = http://localhost:5022
-
-GET {{ProductApp.Backend_HostAddress}}/api/color/
-Accept: application/json
-
-###

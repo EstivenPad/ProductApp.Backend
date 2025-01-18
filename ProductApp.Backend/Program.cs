@@ -1,4 +1,4 @@
-
+using ProductApp.Application;
 using ProductApp.DataAccess;
 
 namespace ProductApp.Backend
@@ -10,10 +10,19 @@ namespace ProductApp.Backend
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDataAccessServicesRegistration(builder.Configuration);
+            builder.Services.AddDataAccessServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
+            // Creacion y registro de policy para uso del Cross-Origin Resource Sharing (CORS)
+            builder.Services.AddCors(options => {
+                options.AddPolicy("all", builder => builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                );
+            });
 
             var app = builder.Build();
 
@@ -24,9 +33,11 @@ namespace ProductApp.Backend
             }
 
             app.UseHttpsRedirection();
+            
+            //Inclucion de un CORS middleware en el pipeline para utilizar la policy 'all' previamente configurada
+            app.UseCors("all");
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

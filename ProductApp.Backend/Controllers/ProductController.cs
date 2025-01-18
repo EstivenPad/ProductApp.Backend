@@ -1,25 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Services.Colors;
+using ProductApp.Application.Services.Products;
 using ProductApp.Core;
 
 namespace ProductApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ColorController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        protected IColorService colorService;
-        public ColorController(IColorService _colorService)
+        protected IProductService productService;
+        public ProductController(IProductService _productService)
         {
-            colorService = _colorService;
+            productService = _productService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Color>>> Get() 
+        public async Task<ActionResult<List<Product>>> Get()
         {
             try
             {
-                var response = await colorService.GetAllColorsAsync();
+                var response = await productService.GetAllProductsAsync();
                 return Ok(response);
             }
             catch (Exception)
@@ -29,14 +29,14 @@ namespace ProductApp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Color?>> Get(int id)
+        public async Task<ActionResult<Product?>> Get(int id)
         {
             try
             {
-                var response = await colorService.GetColorByIdAsync(id);
+                var response = await productService.GetProductByIdAsync(id);
 
                 if (response is null)
-                    return NotFound($"No existe un Color con Id({id})");
+                    return NotFound($"No existe un Producto con Id({id})");
 
                 return Ok(response);
             }
@@ -47,11 +47,15 @@ namespace ProductApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Color color)
+        public async Task<ActionResult<int>> Post(Product product)
         {
             try
             {
-                var response = await colorService.AddColorAsync(color);
+                var response = await productService.AddProductAsync(product);
+
+                if (response == -2)
+                    return NotFound($"No existe un Color con Id({product.ColorId})");
+
                 return Ok(response);
             }
             catch (Exception)
@@ -61,14 +65,14 @@ namespace ProductApp.API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<int>> Put(Color color)
+        public async Task<ActionResult<int>> Put(Product product)
         {
             try
             {
-                var response = await colorService.EditColorAsync(color);
+                var response = await productService.EditProductAsync(product);
 
                 if (response < 0)
-                    return NotFound($"No existe un Color con Id({color.Id})");
+                    return NotFound($"No existe un Producto con Id({product.Id})");
 
                 return Ok(response);
             }
@@ -83,10 +87,10 @@ namespace ProductApp.API.Controllers
         {
             try
             {
-                var response = await colorService.RemoveColorAsync(id);
+                var response = await productService.RemoveProductAsync(id);
 
                 if (response < 0)
-                    return NotFound($"No existe un Color con Id({id})");
+                    return NotFound($"No existe un Producto con Id({id})");
 
                 return Ok(response);
             }
