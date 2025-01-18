@@ -1,4 +1,6 @@
 
+using ProductApp.DataAccess;
+
 namespace ProductApp.Backend
 {
     public class Program
@@ -8,6 +10,7 @@ namespace ProductApp.Backend
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDataAccessServicesRegistration(builder.Configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
