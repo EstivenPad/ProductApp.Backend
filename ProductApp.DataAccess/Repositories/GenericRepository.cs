@@ -13,10 +13,11 @@ namespace ProductApp.DataAccess.Repositories
         {
             dbContext = _dbContext;
         }
-        public async Task CreateAsync(T entity)
+        public async Task<int> CreateAsync(T entity)
         {
             await dbContext.AddAsync(entity);
             await dbContext.SaveChangesAsync();
+            return entity.Id;
         }
 
         public async Task DeleteAsync(T entity)
