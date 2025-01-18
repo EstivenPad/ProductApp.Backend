@@ -26,12 +26,12 @@ namespace ProductApp.DataAccess.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync()
         {
             return await dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T> GetByIdAsync(int id)
         {
             return await dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }

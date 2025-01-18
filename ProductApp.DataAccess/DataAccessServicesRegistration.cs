@@ -9,7 +9,7 @@ namespace ProductApp.DataAccess
 {
     public static class DataAccessServicesRegistration
     {
-        public static IServiceCollection AddDataAccessServicesRegistration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
         {
             //Registro el 'DatabaseContext' en el service container
             services.AddDbContext<DatabaseContext>(options => {
