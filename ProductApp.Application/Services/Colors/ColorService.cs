@@ -6,10 +6,12 @@ namespace ProductApp.Application.Services.Colors
     public class ColorService : IColorService
     {
         protected readonly IColorRepository colorRepository;
+
         public ColorService(IColorRepository _colorRepository)
         {
             colorRepository = _colorRepository;
         }
+
         public async Task<int> AddColorAsync(Color color)
         {
             try
@@ -18,7 +20,6 @@ namespace ProductApp.Application.Services.Colors
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -33,11 +34,11 @@ namespace ProductApp.Application.Services.Colors
                     return -1;
 
                 await colorRepository.UpdateAsync(color);
+
                 return color.Id;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -50,7 +51,6 @@ namespace ProductApp.Application.Services.Colors
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -63,7 +63,6 @@ namespace ProductApp.Application.Services.Colors
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -72,17 +71,25 @@ namespace ProductApp.Application.Services.Colors
         {
             try
             {
-                var color = await colorRepository.GetByIdAsync(id);
+                var isReference = await colorRepository.HasAnyReference(id);
 
-                if (color is null)
-                    return -1;
+                if (!isReference)
+                {
+                    var color = await colorRepository.GetByIdAsync(id);
 
-                await colorRepository.DeleteAsync(color);
-                return id;
+                    if(color != null)
+                    {
+                        await colorRepository.DeleteAsync(color);
+                        return id;
+                    }
+
+                    return -2;//Not Found
+                }
+
+                return -1;//Reference Error
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

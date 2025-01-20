@@ -9,7 +9,21 @@ namespace ProductApp.DataAccess.Context
         {
         }
 
-        public DbSet<Color> Color { get; set; }
-        public DbSet<Product> Product { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductPrice> ProductPrices { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductPrice>()
+                .HasOne<Product>(pc => pc.Product)
+                .WithMany(p => p.ProductPrices)
+                .HasForeignKey(pc => pc.ProductId);
+
+            modelBuilder.Entity<ProductPrice>()
+                .HasOne<Color>(pc => pc.Color)
+                .WithMany(c => c.ProductPrices)
+                .HasForeignKey(pc => pc.ColorId);
+        }
     }
 }

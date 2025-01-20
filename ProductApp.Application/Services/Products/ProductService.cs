@@ -7,26 +7,37 @@ namespace ProductApp.Application.Services.Products
     {
         protected readonly IProductRepository productRepository;
         protected readonly IColorRepository colorRepository;
+        protected readonly IProductPriceRepository productPriceRepository;
 
-        public ProductService(IProductRepository _productRepository, IColorRepository _colorRepository)
+        public ProductService(IProductRepository _productRepository,
+                              IColorRepository _colorRepository,
+                              IProductPriceRepository _productPriceRepository)
         {
             productRepository = _productRepository;
             colorRepository = _colorRepository;
+            productPriceRepository = _productPriceRepository;
         }
+
         public async Task<int> AddProductAsync(Product product)
         {
             try
             {
-                var color = await colorRepository.GetByIdAsync(product.ColorId);
-                
-                if (color is null)
-                    return -2;
+                //Create a new Product object without a ProductPrice collection
+                //for saved into Product table database
+                var productToAdd = new Product
+                {
+                    Name = product.Name
+                };
 
-                return await productRepository.CreateAsync(product);
+                var productId = await productRepository.CreateAsync(productToAdd);
+
+                //Save the collection of colors with their prices with the id of the prestored product
+                await productPriceRepository.CreateAsync(product.ProductPrices, productId);
+
+                return productId;
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -35,22 +46,22 @@ namespace ProductApp.Application.Services.Products
         {
             try
             {
-                //Si el color del producto no existe en la BD se retorna -2
-                var color = await colorRepository.GetByIdAsync(productToUpdate.ColorId);
-                if (color is null)
-                    return -2;
-
-                //Por el contrario si el producto no existe en la BD se retorna -1
                 var product = await productRepository.GetByIdAsync(productToUpdate.Id);
+                
                 if (product is null)
                     return -1;
 
+                var productToEdit = new Product
+                {
+                    Name = product.Name
+                };
+
                 await productRepository.UpdateAsync(productToUpdate);
+
                 return productToUpdate.Id;
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -63,12 +74,11 @@ namespace ProductApp.Application.Services.Products
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<Product?> GetProductByIdAsync(int id)
         {
             try
             {
@@ -76,7 +86,6 @@ namespace ProductApp.Application.Services.Products
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -91,11 +100,11 @@ namespace ProductApp.Application.Services.Products
                     return -1;
 
                 await productRepository.DeleteAsync(product);
+
                 return id;
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

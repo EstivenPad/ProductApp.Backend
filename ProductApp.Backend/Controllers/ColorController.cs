@@ -9,6 +9,7 @@ namespace ProductApp.API.Controllers
     public class ColorController : ControllerBase
     {
         protected IColorService colorService;
+
         public ColorController(IColorService _colorService)
         {
             colorService = _colorService;
@@ -36,7 +37,7 @@ namespace ProductApp.API.Controllers
                 var response = await colorService.GetColorByIdAsync(id);
 
                 if (response is null)
-                    return NotFound($"No existe un Color con Id({id})");
+                    return NotFound($"No existe un color con el Id({id})");
 
                 return Ok(response);
             }
@@ -68,7 +69,7 @@ namespace ProductApp.API.Controllers
                 var response = await colorService.EditColorAsync(color);
 
                 if (response < 0)
-                    return NotFound($"No existe un Color con Id({color.Id})");
+                    return NotFound($"No existe un color con el Id({color.Id})");
 
                 return Ok(response);
             }
@@ -85,8 +86,13 @@ namespace ProductApp.API.Controllers
             {
                 var response = await colorService.RemoveColorAsync(id);
 
-                if (response < 0)
-                    return NotFound($"No existe un Color con Id({id})");
+                if (response == -1)
+                    return BadRequest(new {
+                                        message = "¡No se puede eliminar este color!",
+                                        description = "Este color esta siendo utilizado en un producto, por favor elimine todas las referencias antes de seguir..."
+                                    });
+                else if (response == -2)
+                    return NotFound($"No existe un color con el Id({id})");
 
                 return Ok(response);
             }

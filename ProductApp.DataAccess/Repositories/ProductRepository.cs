@@ -5,26 +5,76 @@ using ProductApp.DataAccess.Context;
 
 namespace ProductApp.DataAccess.Repositories
 {
-    public class ProductRepository : GenericRepository<Product>, IProductRepository
+    public class ProductRepository : IProductRepository
     {
-        public ProductRepository(DatabaseContext _dbContext) : base(_dbContext)
+        protected readonly DatabaseContext dbContext;
+
+        public ProductRepository(DatabaseContext _dbContext)
         {
+            dbContext = _dbContext;
         }
 
-        public override async Task<List<Product>> GetAllAsync()
+        public async Task<int> CreateAsync(Product entity)
         {
-            return await dbContext.Product
-                            .Include(p => p.Color)
-                            .AsNoTracking()
-                            .ToListAsync();
+            await dbContext.AddAsync(entity);
+            await dbContext.SaveChangesAsync();
+            return entity.Id;
         }
 
-        public override async Task<Product> GetByIdAsync(int id)
+        public async Task DeleteAsync(Product entity)
         {
-            return await dbContext.Product
-                            .Include(p => p.Color)
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(p => p.Id == id);
+            dbContext.Products.Remove(entity);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Product>> GetAllAsync()
+        {
+            //Avoid the recursive object reference removing each 'Product' reference in each 'ProductPrice' object
+            return await dbContext.Products
+                                    .Select(p => new Product
+                                    {
+                                        Id = p.Id,
+                                        Name = p.Name,
+                                        ProductPrices = p.ProductPrices.Select(pp => new ProductPrice
+                                        {
+                                            Id = pp.Id,
+                                            Price = pp.Price,
+                                            IsSelected = pp.IsSelected,
+                                            ColorId = pp.ColorId,
+                                            Color = pp.Color,
+                                            ProductId = pp.ProductId,
+                                        }).ToList()
+                                    })
+                                    .AsNoTracking()
+                                    .ToListAsync();
+                }
+
+        public async Task<Product?> GetByIdAsync(int id)
+        {
+            //Avoid the recursive object reference removing each 'Product' reference in each 'ProductPrice' object
+            return await dbContext.Products
+                                    .Where(p => p.Id == id)
+                                    .Select(p => new Product
+                                    {
+                                        Id = p.Id,
+                                        Name = p.Name,
+                                        ProductPrices = p.ProductPrices.Select(pp => new ProductPrice
+                                        {
+                                            Id = pp.Id,
+                                            Price = pp.Price,
+                                            IsSelected = pp.IsSelected,
+                                            ColorId = pp.ColorId,
+                                            Color = pp.Color,
+                                            ProductId = pp.ProductId,
+                                        }).ToList()
+                                    })
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync();
+        }
+
+        public Task UpdateAsync(Product entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

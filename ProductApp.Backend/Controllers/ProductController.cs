@@ -9,6 +9,7 @@ namespace ProductApp.API.Controllers
     public class ProductController : ControllerBase
     {
         protected IProductService productService;
+
         public ProductController(IProductService _productService)
         {
             productService = _productService;
@@ -36,7 +37,7 @@ namespace ProductApp.API.Controllers
                 var response = await productService.GetProductByIdAsync(id);
 
                 if (response is null)
-                    return NotFound($"No existe un Producto con Id({id})");
+                    return NotFound($"No existe un producto con el Id({id})");
 
                 return Ok(response);
             }
@@ -52,9 +53,6 @@ namespace ProductApp.API.Controllers
             try
             {
                 var response = await productService.AddProductAsync(product);
-
-                if (response == -2)
-                    return NotFound($"No existe un Color con Id({product.ColorId})");
 
                 return Ok(response);
             }
@@ -72,7 +70,7 @@ namespace ProductApp.API.Controllers
                 var response = await productService.EditProductAsync(product);
 
                 if (response < 0)
-                    return NotFound($"No existe un Producto con Id({product.Id})");
+                    return NotFound($"No existe un producto con Id({product.Id})");
 
                 return Ok(response);
             }
@@ -90,7 +88,7 @@ namespace ProductApp.API.Controllers
                 var response = await productService.RemoveProductAsync(id);
 
                 if (response < 0)
-                    return NotFound($"No existe un Producto con Id({id})");
+                    return NotFound($"No existe un producto con Id({id})");
 
                 return Ok(response);
             }

@@ -16,10 +16,9 @@ namespace ProductApp.DataAccess
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"));
             });
 
-            //Registro cualquier implementacion de 'IGenericRepository' que herede de 'GenericRepository', en el service container
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IColorRepository, ColorRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
 
             return services;
         }
