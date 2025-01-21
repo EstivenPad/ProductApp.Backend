@@ -7,7 +7,7 @@ namespace ProductApp.Application.Contracts
         Task<List<Product>> GetAllAsync();
         Task<Product?> GetByIdAsync(int id);
         Task<int> CreateAsync(Product entity);
-        Task UpdateAsync(Product entity);
+        Task UpdateAsync(Product productToUpdate, Product productFromDB);
         Task DeleteAsync(Product entity);
     }
 }

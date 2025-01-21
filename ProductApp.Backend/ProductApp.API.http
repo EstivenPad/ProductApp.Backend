@@ -87,27 +87,27 @@ Content-Type: application/json
 
 {
   "id": 14,
-  "name": "TV",
+  "name": "iPhone",
   "productPrices": [
       {
           "id": 27,
-          "price": 110,
-          "isSelected": false,
-          "productId": 0,
+          "price": 90,
+          "isSelected": true,
+          "productId": 14,
           "colorId": 2
       },
       {
           "id": 28,
           "price": 120,
           "isSelected": false,
-          "productId": 0,
+          "productId": 14,
           "colorId": 2
       },
       {
           "id": 29,
           "price": 130,
-          "isSelected": true,
-          "productId": 0,
+          "isSelected": false,
+          "productId": 14,
           "colorId": 2
       }
   ]

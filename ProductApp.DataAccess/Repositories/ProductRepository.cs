@@ -35,15 +35,16 @@ namespace ProductApp.DataAccess.Repositories
                                     {
                                         Id = p.Id,
                                         Name = p.Name,
-                                        ProductPrices = p.ProductPrices.Select(pp => new ProductPrice
-                                        {
-                                            Id = pp.Id,
-                                            Price = pp.Price,
-                                            IsSelected = pp.IsSelected,
-                                            ColorId = pp.ColorId,
-                                            Color = pp.Color,
-                                            ProductId = pp.ProductId,
-                                        }).ToList()
+                                        ProductPrices = p.ProductPrices
+                                                            .Select(pp => new ProductPrice
+                                                            {
+                                                                Id = pp.Id,
+                                                                Price = pp.Price,
+                                                                IsSelected = pp.IsSelected,
+                                                                ColorId = pp.ColorId,
+                                                                Color = pp.Color,
+                                                                ProductId = pp.ProductId,
+                                                            }).ToList()
                                     })
                                     .AsNoTracking()
                                     .ToListAsync();
@@ -72,9 +73,50 @@ namespace ProductApp.DataAccess.Repositories
                                     .FirstOrDefaultAsync();
         }
 
-        public Task UpdateAsync(Product entity)
+        public async Task UpdateAsync(Product productToUpdate, Product productFromDB)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var productExist = await dbContext.Products.AnyAsync(p => p.Id == productToUpdate.Id);
+
+                if (productExist)
+                {
+                    dbContext.Update(productToUpdate);
+
+                    await dbContext.SaveChangesAsync();
+                }
+                // Add new
+                //foreach (var newProductPrice in productToUpdate.ProductPrices.Where(p => p.Id == 0))
+                //{
+                //    dbContext.ProductPrices.Add(newProductPrice);
+                //}
+
+                //// Update existing
+                //foreach (var existingProductPice in productFromDB.ProductPrices)
+                //{
+                //    var updatedProductPrice = productToUpdate.ProductPrices.FirstOrDefault(pp => pp.Id == existingProductPice.Id);
+
+                //    if (updatedProductPrice != null) 
+                //    {
+                //        existingProductPice.Price = updatedProductPrice.Price;
+                //        existingProductPice.IsSelected = updatedProductPrice.IsSelected;
+                //        existingProductPice.ColorId = updatedProductPrice.ColorId;
+                //        existingProductPice.ProductId = updatedProductPrice.ProductId;
+                //    }
+                //}
+
+                //// Remove deleted
+                //var productPricesToRemove = productFromDB.ProductPrices
+                //    .Where(pp => productToUpdate.ProductPrices.All(u => u.Id != pp.Id))
+                //    .ToList();
+
+                //dbContext.RemoveRange(productPricesToRemove);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

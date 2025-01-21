@@ -14,15 +14,17 @@ namespace ProductApp.Backend
             builder.Services.AddApplicationServices();
 
             builder.Services.AddControllers();
-            builder.Services.AddOpenApi();
 
             // Creacion y registro de policy para uso del Cross-Origin Resource Sharing (CORS)
             builder.Services.AddCors(options => {
-                options.AddPolicy("all", builder => builder.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
+                options.AddPolicy("all", builder => builder.WithOrigins("http://localhost:5173")
+                                                            .AllowAnyHeader()
+                                                            .AllowAnyMethod()
+                                                            .AllowCredentials()
                 );
             });
+
+            builder.Services.AddOpenApi();
 
             var app = builder.Build();
 

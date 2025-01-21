@@ -46,17 +46,12 @@ namespace ProductApp.Application.Services.Products
         {
             try
             {
-                var product = await productRepository.GetByIdAsync(productToUpdate.Id);
+                var productFromDB = await productRepository.GetByIdAsync(productToUpdate.Id);
                 
-                if (product is null)
+                if (productFromDB is null)
                     return -1;
 
-                var productToEdit = new Product
-                {
-                    Name = product.Name
-                };
-
-                await productRepository.UpdateAsync(productToUpdate);
+                await productRepository.UpdateAsync(productToUpdate, productFromDB);
 
                 return productToUpdate.Id;
             }

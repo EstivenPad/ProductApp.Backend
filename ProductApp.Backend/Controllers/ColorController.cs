@@ -88,8 +88,8 @@ namespace ProductApp.API.Controllers
 
                 if (response == -1)
                     return BadRequest(new {
-                                        message = "¡No se puede eliminar este color!",
-                                        description = "Este color esta siendo utilizado en un producto, por favor elimine todas las referencias antes de seguir..."
+                                        title = "¡No se puede eliminar este color!",
+                                        message = "Este color esta siendo utilizado en un producto, por favor elimine todas las referencias antes de seguir."
                                     });
                 else if (response == -2)
                     return NotFound($"No existe un color con el Id({id})");
