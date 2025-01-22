@@ -246,7 +246,12 @@ Esta API permite gestionar productos con múltiples precios por color, desarroll
     dotnet restore
     ```
 
-3. Ejecutar la aplicación:
+3. Crear la base de datos:
+    ```bash
+    dotnet ef database update
+    ```
+    
+4. Ejecutar la aplicación:
     ```bash
     dotnet run
     ```
