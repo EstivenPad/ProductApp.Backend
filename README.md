@@ -16,6 +16,70 @@ Esta API permite gestionar productos con múltiples precios por color, desarroll
 
 ## Endpoints de la API
 
+### COLORES
+### 1. `GET /api/color`
+
+- **Descripción**: Obtiene todos los colores.
+- **Respuesta**:
+    ```json
+    [
+      {
+        "id": 1,
+        "name": "Amarillo"
+      },
+      {
+        "id": 2,
+        "name": "Rojo"
+      },
+    ]
+    ```
+
+### 2. `POST /api/color`
+
+- **Descripción**: Crea un nuevo color.
+- **Cuerpo de la solicitud**:
+    ```json
+    {
+      "name": "Nuevo Color"
+    }
+    ```
+- **Respuesta**:
+    ```json
+    1
+    
+### 3. `PUT /api/color`
+
+- **Descripción**: Actualiza un color existente.
+- **Cuerpo de la solicitud**:
+    ```json
+    {
+      "id": 1,
+      "name": "Color Actualizado"
+    }
+    ```
+- **Respuesta**:
+    ```json
+    1
+    
+### 4. `DELETE /api/color/{id}`
+
+- **Descripción**: Elimina un color por su ID.
+- **Respuesta**:
+    ```json
+    1
+
+### 5. `GET /api/product/{id}`
+
+- **Descripción**: Obtiene un color específico.
+- **Respuesta**:
+    ```json
+    {
+      "id": 1,
+      "name": "Color Creado"
+    }
+    ```
+
+### PRODUCTOS
 ### 1. `GET /api/product`
 
 - **Descripción**: Obtiene todos los productos con sus precios y colores asociados.
@@ -159,7 +223,6 @@ Esta API permite gestionar productos con múltiples precios por color, desarroll
       ]
     }
     ```
-
 ---
 
 ## Instalación
